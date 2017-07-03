@@ -1,10 +1,7 @@
 import pyHook, pythoncom, sys, logging,os, httplib, urllib, getpass, shutil, pickle
 from datetime import datetime
 
-
 grph = pickle.load(open("datadict.p","rb"))
-allpaths = pickle.load(open("pathlist.p","rb"))
-allfiles = pickle.load(open("filelist.p","rb"))
 
 file_log = datetime.now().strftime('%y%m%w%d')+".txt"
 
@@ -14,20 +11,6 @@ filecheck=False
 filename=""
 conf=False
 sub=[]
-
-def findfullpath(dest):
-    poss=[]
-    start=-1
-    result=0
-    while(result>=0):
-        try:
-            result=allfiles[start+1:].index(dest)
-        except:
-            break
-        if(result>=0):
-            start+=result+1
-            poss.append(allpaths[start])
-    return poss
 
 def OnKeyboardEvent(event):
     global line_buff
@@ -75,7 +58,10 @@ def OnKeyboardEvent(event):
             if(not chr(ky)=="<"):
                 filename += chr(ky)
             else:
-                sub=findfullpath(filename)
+                try:
+                    sub=grph[filename]
+                except:
+                    sub=[]
                 if(len(sub)==1):
                     os.startfile(sub[0]+"\\"+filename)
                     filename=""
@@ -93,7 +79,6 @@ def OnKeyboardEvent(event):
                     filename=""
                 filecheck=False
 
-
 #### Update linebuff with event
         
     if(ky > 31 and ky < 127):
@@ -109,7 +94,6 @@ def OnKeyboardEvent(event):
         line_buff = line_buff[:-1]
         return True
 
-        
     return True
 
 
