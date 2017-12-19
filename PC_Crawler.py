@@ -9,10 +9,7 @@ bsname=os.path.basename
 orig_path=os.getcwd()
 
 def addtogrph(branch,node):
-    if node in list(grph.keys()):
-        grph[node]=grph[node]+[branch]
-    else:
-        grph[node]=[branch]
+    grph.update({node:branch})
 
 def readfoldersin(path):
     return [d for d in os.listdir(path) if os.path.isdir(os.path.join(path, d))]
@@ -23,9 +20,8 @@ def readfilesin(path):
 def iterthrough(path):
     os.chdir(path)
     if(len(readfilesin(path))<1000):
-        for filee in readfilesin(path):
-            if not filee.startswith('.'):
-                addtogrph(path,filee)
+        a=[addtogrph(path,filee) for filee in readfilesin(path) if not filee.startswith('.')]
+
     for folder in readfoldersin(path):
         addtogrph(path,folder)
         newpath=path+"\\"+folder
